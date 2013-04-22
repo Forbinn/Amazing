@@ -1,8 +1,10 @@
 open Case
 
-let _ = Sdl.init [`VIDEO]
-
-let init () = ()
+let init () = 
+  begin
+    Sdl.init [`VIDEO];
+    Sdlevent.enable_events Sdlevent.all_events_mask;
+  end
 
 let draw map w =
   let rec aff i map = match i, map with
