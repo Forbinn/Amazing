@@ -1,22 +1,6 @@
 open Case
 
 (*
- * Fonction servant a initialiser la SDL si l'option a ete choisi
-*)
-let init aff =
-  if aff = "sdl" then
-    begin
-      Sdl.init [`VIDEO];
-      Sdlevent.enable_events Sdlevent.all_events_mask;
-    end
-
-(*
- * Fonction servant a decharger la SDL
-*)
-let quit aff =
-  if aff = "sdl" then Sdl.quit ()
-
-(*
  * Fonction servant a dessiner le labyrinthe
  * (en texte uniquement)
 *)

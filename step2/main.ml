@@ -29,9 +29,6 @@ let () = begin
   Arg.parse args other usage_msg;
   if !w = 0 || !h = 0 then
     Arg.usage args usage_msg
+  else if aff = "sdl" then
   else
-    begin
-      Affichage.init !aff;
-      Affichage.quit !aff
-    end
 end
