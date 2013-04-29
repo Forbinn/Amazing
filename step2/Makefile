@@ -5,11 +5,11 @@
 ## Login   <leroy_v@epitech.eu>
 ##
 ## Started on  Tue Apr 02 12:23:55 2013 vincent leroy
-## Last update Mon Apr 22 21:26:17 2013 fabien casters
+## Last update Mon Apr 29 17:19:00 2013 vincent leroy
 ##
 
 EXECDIR = .
-RESULT  = $(EXECDIR)/step1
+RESULT  = $(EXECDIR)/step2
 SOURCES = Case.ml Affichage.ml main.ml
 LIBS    = bigarray sdl sdlloader
 INCDIRS = +sdl
