@@ -28,11 +28,21 @@ let generate width height =
   let rec create_cases cases n =
     if n < 0 then cases
     else create_cases ((Case.create n n)::cases) (n - 1)
-  and color_cases cases color doors = match doors with
+  and color_cases cases color doors path = match doors with
     | (id::r) -> let case = !(get_ref_case_from_id cases id)
       in Case.change_color case color;
-      color_cases cases color (Case.get_door case)
+      if not (List.exists ((=) id) path) then
+        color_cases cases color (Case.get_door case) (id::path)
     | [] -> ()
+  (*and color_cases cases color doors = 
+    let rec create_case_list cases doors l = match doors with
+      | (id::r) -> create_case_list cases r
+        (if (List.exist ((=) id) l) then l else id::l)
+      | [] -> l
+    and fill_case_list color l = match l with
+      | (id::r) -> Case.change_color !(get_ref_case_from_id cases id) color;
+        fill_case_list color r
+      | [] -> ()*)
   and open_doors cases =
     let is_ok cases =
       let rec is_ok_aux cases color = match cases with
@@ -44,11 +54,18 @@ let generate width height =
     else let a_id = (Random.int (width * height))
       in let b_id = (get_random_side a_id width height)
         in let (a, b) = (get_ref_case_from_id cases a_id, get_ref_case_from_id cases b_id)
-          in (if (Case.get_color !a) <> (Case.get_color !b) then
-              Printf.printf "%d.%d\n" a_id b_id;
+          in if (Case.get_color !a) <> (Case.get_color !b)
+            && not (List.exists ((=) a_id) (Case.get_door !b)) then
+              begin 
+              Printf.printf "<";
+              Printf.printf "%d:" a_id;
+              List.iter (Printf.printf "%d,") (Case.get_door !b);
+              Printf.printf ">";
+            Printf.printf "%d.%d\n" (Case.get_color !a) (Case.get_color !b);
               Case.add_door !a b_id;
               Case.add_door !b a_id;
-              color_cases cases (Case.get_color !a) (Case.get_door !b));
+              color_cases cases (Case.get_color !a) (Case.get_door !b) [];
+              end;
             open_doors cases
   in open_doors (create_cases [] (width * height - 1))
 
