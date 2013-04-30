@@ -1,3 +1,4 @@
 open Case
+open CaseMap
 
-val draw : case list -> int -> unit
+val draw : map -> unit

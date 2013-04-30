@@ -1,10 +1,13 @@
 open Case
+open CaseMap
 
 (*
  * Fonction servant a dessiner le labyrinthe
  * (en texte uniquement)
 *)
-let draw map w =
+let draw map =
+  let w = CaseMap.get_width map in
+  let maplist = CaseMap.get_case_list map in
   let rec draw_aux i map = match i, map with
     | _, [] -> ()
     | i, _ when i <= 0 -> Printf.printf " _";
@@ -25,6 +28,4 @@ let draw map w =
                 draw_aux (i + 1) r
               end
   in
-    begin
-      draw_aux ((-w) + 1) map
-    end
+    draw_aux ((-w) + 1) maplist
