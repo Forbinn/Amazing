@@ -1,35 +1,37 @@
 open Affichage
+open CaseMap
 
 let w = ref 0
 let h = ref 0
-let forme = ref 4
 
-let args = [
-    ("--square", Arg.Unit (fun () -> forme := 4), "Square mode (default)");
-    ("--hexagonal", Arg.Unit (fun () -> forme := 6), "Hexagone mode");
-]
-let usage_msg = "Usage: " ^ Sys.argv.(0) ^ " w h [-t] [--square | --hexagonal]"
-let other s = try
-                if !w = 0 then w := (int_of_string s)
-                else if !h = 0 then h := (int_of_string s)
-                else
-                  begin
-                    Arg.usage args usage_msg;
-                    exit 1
-                  end
-              with
-              Failure _ -> begin
-                Arg.usage args usage_msg;
-                exit 1
-              end
+let usage_msg = "Usage: " ^ Sys.argv.(0) ^ " width height"
+
+let parse argv =
+  let dimension str =
+    if !w = 0 then w := (int_of_string str)
+    else if !h = 0 then h := (int_of_string str)
+    else
+      begin
+        print_endline usage_msg;
+        exit 1;
+      end
+  in
+  let parse_one = function
+    | x -> if x != Sys.argv.(0) then
+      try dimension x with Failure _ -> begin
+        print_endline usage_msg;
+        exit 1;
+      end
+  in
+  Array.iter parse_one Sys.argv
 
 let () = begin
-  Arg.parse args other usage_msg;
+  parse Sys.argv;
   if !w = 0 || !h = 0 then
-    Arg.usage args usage_msg
-    (*
+    print_endline usage_msg
   else
-     * Generer la map et affichage
-     * let () = Affichage.draw map w
-     *)
+    begin
+      let map = CaseMap.create !w !h in
+      Affichage.draw map;
+    end
 end
