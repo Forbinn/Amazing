@@ -55,19 +55,18 @@ let generate width height =
     else let a_id = (Random.int (width * height))
       in let b_id = (get_random_side a_id width height)
         in let (a, b) = (get_ref_case_from_id cases a_id, get_ref_case_from_id cases b_id)
-        in Printf.printf "[%d-%d]\n" a_id b_id; if (Case.get_color !a) <> (Case.get_color !b)
+        in (*Printf.printf "[%d-%d]\n" a_id b_id;*) if (Case.get_color !a) <>
+        (Case.get_color !b)
             (*&& not (List.exists ((=) a_id) (Case.get_door !b))*) then
               begin 
               Printf.printf "<";
               Printf.printf "%d:" a_id;
-              List.iter (Printf.printf "%d,") (Case.get_door !b);
+              List.iter (Printf.printf "%d,") (Case.get_door !a);
               Printf.printf ">";
             Printf.printf "%d.%d\n" (Case.get_color !a) (Case.get_color !b);
               Case.add_door !a b_id;
               Case.add_door !b a_id;
-              Printf.printf "{";
               color_cases cases (Case.get_color !a) (Case.get_door !b) [];
-              Printf.printf "}";
               open_doors cases (n - 1)
               end
             else open_doors cases n
