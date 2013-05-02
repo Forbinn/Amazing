@@ -8,7 +8,7 @@ let init w h =
   begin
     Sdl.init [`VIDEO];
     let screen = Sdlvideo.set_video_mode (w * 20 + 1) (h * 20 + 1) [] in
-    Sdlvideo.fill_rect screen (Sdlvideo.map_RGB screen Sdlvideo.white);
+    Sdlvideo.fill_rect screen (Sdlvideo.map_RGB screen Sdlvideo.black);
     Sdlvideo.flip screen;
     screen
   end
