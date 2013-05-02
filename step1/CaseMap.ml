@@ -24,7 +24,7 @@ let rec get_random_side id width height =
 let get_ref_case_from_id cases id =
   ref (List.nth cases id)
 
-(*let generate width height =
+let generate width height =
   let rec create_cases cases n =
     if n < 0 then cases
     else create_cases ((Case.create n n)::cases) (n - 1)
@@ -43,7 +43,7 @@ let get_ref_case_from_id cases id =
       | (id::r) -> Case.change_color !(get_ref_case_from_id cases id) color;
         fill_case_list color r
       | [] -> ()*)
-  and open_doors cases =
+  and open_doors cases n =
     let is_ok cases =
       let rec is_ok_aux cases color = match cases with
         | (c::r) -> if (Case.get_color c) <> color then false
@@ -51,11 +51,12 @@ let get_ref_case_from_id cases id =
         | [] -> true
       in is_ok_aux cases (Case.get_color (List.nth cases 0))
     in if (is_ok cases) = true then cases
+    (*in if n = 0 then cases*)
     else let a_id = (Random.int (width * height))
       in let b_id = (get_random_side a_id width height)
         in let (a, b) = (get_ref_case_from_id cases a_id, get_ref_case_from_id cases b_id)
-          in if (Case.get_color !a) <> (Case.get_color !b)
-            && not (List.exists ((=) a_id) (Case.get_door !b)) then
+        in Printf.printf "[%d-%d]\n" a_id b_id; if (Case.get_color !a) <> (Case.get_color !b)
+            (*&& not (List.exists ((=) a_id) (Case.get_door !b))*) then
               begin 
               Printf.printf "<";
               Printf.printf "%d:" a_id;
@@ -64,12 +65,15 @@ let get_ref_case_from_id cases id =
             Printf.printf "%d.%d\n" (Case.get_color !a) (Case.get_color !b);
               Case.add_door !a b_id;
               Case.add_door !b a_id;
+              Printf.printf "{";
               color_cases cases (Case.get_color !a) (Case.get_door !b) [];
-              end;
-            open_doors cases
-  in open_doors (create_cases [] (width * height - 1))*)
+              Printf.printf "}";
+              open_doors cases (n - 1)
+              end
+            else open_doors cases n
+  in open_doors (create_cases [] (width * height - 1)) (width * height)
 
-let generate width height =
+(*let generate width height =
   let rec create_cases cases n =
     if n = 0 then cases
     else create_cases ((Case.create n n)::cases) (n - 1)
@@ -109,7 +113,7 @@ let generate width height =
     in begin
       open_doors c l;
       c;
-    end
+    end*)
 
 let create width height =
   {
