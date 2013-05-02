@@ -15,12 +15,12 @@ let init w h =
 let quit () = Sdl.quit ()
 
 (*
- * Fonction qui wait la touche escape
+ * Fonction qui wait la touche escape ou la fermeture de la fenetre
  *)
 let rec run () = match Sdlevent.wait_event () with
   | Sdlevent.KEYDOWN { Sdlevent.keysym = Sdlkey.KEY_ESCAPE } -> ()
   | Sdlevent.QUIT -> ()
-  | event -> run ()
+  | _ -> run ()
 
 
 let blit_img x y img screen =

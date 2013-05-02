@@ -14,14 +14,14 @@ let draw map =
                           if (i mod w) = 0 then print_endline "";
                           draw_aux (i + 1) map
     | i, c::r -> begin
-                if (Case.get_id c) mod w = 1 then
-                  if (List.exists ((=) ((Case.get_id c) - 1)) (Case.get_door c))
+                if (Case.get_id c) + 1 mod w = 1 then
+                  if (List.exists ((=) (Case.get_id c)) (Case.get_door c))
                   then print_char ' ' else print_char '|';
 
-                if (List.exists ((=) ((Case.get_id c) + w)) (Case.get_door c))
+                if (List.exists ((=) ((Case.get_id c) + w + 1)) (Case.get_door c))
                 then print_char ' ' else print_char '_';
 
-                if (List.exists ((=) ((Case.get_id c) + 1)) (Case.get_door c))
+                if (List.exists ((=) ((Case.get_id c) + 2)) (Case.get_door c))
                 then print_char ' ' else print_char '|';
 
                 if (i mod w) = 0 then print_endline "";
