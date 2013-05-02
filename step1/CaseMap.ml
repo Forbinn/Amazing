@@ -48,8 +48,7 @@ let generate width height =
     else let a_id = (Random.int (width * height))
       in let b_id = (get_random_side a_id width height)
       in let (a, b) = (get_ref_case_from_id cases a_id, get_ref_case_from_id cases b_id)
-        in if (Case.get_color !a) <>
-        (Case.get_color !b)
+        in if (Case.get_color !a) <> (Case.get_color !b)
             && not (List.exists ((=) a_id) (Case.get_door !b)) then
               begin 
               Case.add_door !a b_id;
