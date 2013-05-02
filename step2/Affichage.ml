@@ -1,4 +1,5 @@
 open Case
+open CaseMap
 
 (*
  * init de la SDL
@@ -27,7 +28,7 @@ let blit_img x y img screen =
   let pos = Sdlvideo.rect y x 0 0 in
   Sdlvideo.blit_surface ~dst_rect:pos ~src:img ~dst:screen ()
 
-let blit_case c screen w img_h img_v =
+(*let blit_case c screen w img_h img_v =
   begin
     if not (List.exists ((=) ((Case.get_id c) - 1)) (Case.get_door c))
     then blit_img ((((Case.get_id c) - 1) / w) * 20) ((((Case.get_id c) - 1) mod w) * 20) img_v screen;
@@ -40,12 +41,28 @@ let blit_case c screen w img_h img_v =
 
     if not (List.exists ((=) ((Case.get_id c) + 1)) (Case.get_door c))
     then blit_img ((((Case.get_id c) - 1) / w) * 20) (((((Case.get_id c) - 1) mod w) + 1) * 20) img_v screen;
+  end*)
+
+let blit_case c screen w img_h img_v =
+  begin
+    if not (List.exists ((=) ((Case.get_id c) - 1)) (Case.get_door c))
+    then blit_img (((Case.get_id c) / w) * 20) (((Case.get_id c) mod w) * 20) img_v screen;
+
+    if not (List.exists ((=) ((Case.get_id c) - w)) (Case.get_door c))
+    then blit_img (((Case.get_id c) / w) * 20) (((Case.get_id c) mod w) * 20) img_h screen;
+
+    if not (List.exists ((=) ((Case.get_id c) + w)) (Case.get_door c))
+    then blit_img ((((Case.get_id c) / w) + 1) * 20) (((Case.get_id c) mod w) * 20) img_h screen;
+
+    if not (List.exists ((=) ((Case.get_id c) + 1)) (Case.get_door c))
+    then blit_img (((Case.get_id c) / w) * 20) ((((Case.get_id c) mod w) + 1) * 20) img_v screen;
   end
 
 (*
  * Fonction servant a dessiner le labyrinthe
  *)
-let draw map w screen =
+let draw map screen =
+  let w = CaseMap.get_width map in
   let img_h = Sdlloader.load_image "h.png" in
   let img_v = Sdlloader.load_image "v.png" in
   let rec draw_aux map = match map with
@@ -68,6 +85,6 @@ let draw map w screen =
                 *)
   in
     begin
-      draw_aux map;
+      draw_aux (CaseMap.get_case_list map);
       Sdlvideo.flip screen
     end

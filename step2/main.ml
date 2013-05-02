@@ -34,6 +34,7 @@ let () = begin
       let screen = Affichage.init !w !h in
       let map = CaseMap.create !w !h in
       Affichage.draw map screen;
+      Affichage.run ();
       Affichage.quit ();
     end
 end

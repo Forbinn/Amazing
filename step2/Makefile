@@ -10,7 +10,7 @@
 
 EXECDIR = .
 RESULT  = $(EXECDIR)/step2
-SOURCES = Case.ml Affichage.ml main.ml
+SOURCES = Case.ml CaseMap.ml Affichage.ml main.ml
 LIBS    = bigarray sdl sdlloader
 INCDIRS = +sdl
 
