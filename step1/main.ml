@@ -31,6 +31,7 @@ let () = begin
     print_endline usage_msg
   else
     begin
+      Random.self_init ();
       let map = CaseMap.create !w !h in
       Affichage.draw map;
     end
