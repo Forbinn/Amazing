@@ -14,8 +14,6 @@ let add_door c numDoor = if not (List.exists ((=) numDoor) c.door) then
 
 let get_id c = c.id
 
-let get_id1 c = c.id + 1
-
 let get_color c = c.color
 
 let get_door c = c.door
