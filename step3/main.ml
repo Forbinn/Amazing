@@ -34,6 +34,7 @@ let () = begin
       Random.self_init ();
       let screen = Affichage.init !w !h in
       let map = CaseMap.create !w !h in
+      Affichage.draw_soluce (Solver.solve map 0 (!w * !h - 1)) screen !w;
       Affichage.draw map screen;
       Affichage.run ();
       Affichage.quit ();

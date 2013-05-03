@@ -28,21 +28,6 @@ let blit_img x y img screen =
   let pos = Sdlvideo.rect y x 0 0 in
   Sdlvideo.blit_surface ~dst_rect:pos ~src:img ~dst:screen ()
 
-(*let blit_case c screen w img_h img_v =
-  begin
-    if not (List.exists ((=) ((Case.get_id c) - 1)) (Case.get_door c))
-    then blit_img ((((Case.get_id c) - 1) / w) * 20) ((((Case.get_id c) - 1) mod w) * 20) img_v screen;
-
-    if not (List.exists ((=) ((Case.get_id c) - w)) (Case.get_door c))
-    then blit_img ((((Case.get_id c) - 1) / w) * 20) ((((Case.get_id c) - 1) mod w) * 20) img_h screen;
-
-    if not (List.exists ((=) ((Case.get_id c) + w)) (Case.get_door c))
-    then blit_img (((((Case.get_id c) - 1) / w) + 1) * 20) ((((Case.get_id c) - 1) mod w) * 20) img_h screen;
-
-    if not (List.exists ((=) ((Case.get_id c) + 1)) (Case.get_door c))
-    then blit_img ((((Case.get_id c) - 1) / w) * 20) (((((Case.get_id c) - 1) mod w) + 1) * 20) img_v screen;
-  end*)
-
 let blit_case c screen w img_h img_v =
   begin
     if not (List.exists ((=) ((Case.get_id c) - 1)) (Case.get_door c))
@@ -68,23 +53,16 @@ let draw map screen =
   let rec draw_aux map = match map with
     | [] -> ()
     | c::r -> blit_case c screen w img_h img_v; draw_aux r
-        (*begin
-                if (Case.get_id c) mod w = 1 then
-                  if (List.exists ((=) ((Case.get_id c) - 1)) (Case.get_door c))
-                  then print_char ' ' else print_char '|';
-
-                if (List.exists ((=) ((Case.get_id c) + w)) (Case.get_door c))
-                then print_char ' ' else print_char '_';
-
-                if (List.exists ((=) ((Case.get_id c) + 1)) (Case.get_door c))
-                then print_char ' ' else print_char '|';
-
-                if (i mod w) = 0 then print_endline "";
-                draw_aux (i + 1) r
-              end
-                *)
   in
     begin
       draw_aux (CaseMap.get_case_list map);
       Sdlvideo.flip screen
     end
+
+let draw_soluce l screen w =
+  let img = Sdlloader.load_image "c.png" in
+  let rec draw_soluce_aux = function
+    | [] -> ()
+    | id::r -> blit_img ((id / w) * 20) ((id mod w) * 20) img screen; draw_soluce_aux r
+  in
+  draw_soluce_aux l
