@@ -24,7 +24,7 @@ let rec get_random_side id width height =
 let get_ref_case_from_id cases id =
   ref (List.nth cases id)
 
-let generate width height =
+(*let generate width height =
   let rec create_cases cases n =
     if n < 0 then cases
     else create_cases ((Case.create n n)::cases) (n - 1)
@@ -58,7 +58,36 @@ let generate width height =
               color_cases cases (Case.get_color !a) (Case.get_door !b) [a_id];
             end;
             open_doors cases
-  in open_doors (create_cases [] (width * height - 1))
+  in open_doors (create_cases [] (width * height - 1))*)
+
+let generate width height =
+  let rec generate_aux l lkl i n width =
+    let create_case lkl n width b =
+      let case = Case.create n 0
+      in if b = 1 then
+        begin
+          if ((i + 1) mod width) <> 0 then lkl := (i, i + 1)::!lkl
+        end
+      else
+        begin
+          if ((i + 1) mod width) = 0 then lkl := (i, i + width)::!lkl
+          else let x = Random.int 2
+            in lkl := (i, (if x = 0 then i + 1 else i + width))::!lkl
+        end;
+      case
+    in if i = n then l
+    else let bottom = (i >= n - width)
+      in generate_aux
+        ((create_case lkl i width (if bottom then 1 else 0))::l) lkl
+        (i + 1) n width
+  and link_cases lkl cases = match lkl with
+    | ((i, j)::r) -> Case.add_door (List.nth cases i) j;
+                     Case.add_door (List.nth cases j) i;
+                     link_cases r cases
+    | [] -> cases
+  in let lkl = ref []
+    in let cases = List.rev (generate_aux [] lkl 0 (width * height) width)
+      in link_cases (!lkl) cases
 
 let create width height =
   {
