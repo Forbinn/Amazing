@@ -15,13 +15,23 @@ let init w h =
 
 let quit () = Sdl.quit ()
 
+let mouse_coord = ref []
+
 (*
  * Fonction qui wait la touche escape ou la fermeture de la fenetre
  *)
-let rec run () = match Sdlevent.wait_event () with
+let rec run cbk = match Sdlevent.wait_event () with
+  | Sdlevent.MOUSEBUTTONDOWN e ->
+      mouse_coord := ((e.Sdlevent.mbe_x / 20), (e.Sdlevent.mbe_y / 20))::!mouse_coord;
+      if (List.length !mouse_coord) = 2 then
+        begin
+          cbk !mouse_coord;
+          mouse_coord := []
+        end;
+      run cbk
   | Sdlevent.KEYDOWN { Sdlevent.keysym = Sdlkey.KEY_ESCAPE } -> ()
   | Sdlevent.QUIT -> ()
-  | _ -> run ()
+  | _ -> run cbk
 
 
 let blit_img x y img screen =
@@ -66,3 +76,6 @@ let draw_soluce l screen w =
     | id::r -> blit_img ((id / w) * 20) ((id mod w) * 20) img screen; draw_soluce_aux r
   in
   draw_soluce_aux l
+
+let clear screen =
+  Sdlvideo.fill_rect screen (Int32.zero)

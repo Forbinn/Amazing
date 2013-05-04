@@ -36,7 +36,16 @@ let () = begin
       let map = CaseMap.create !w !h in
       Affichage.draw_soluce (Solver.solve map 0 (!w * !h - 1)) screen !w;
       Affichage.draw map screen;
-      Affichage.run ();
+      Affichage.run (function coord ->
+        let [a; b] = coord
+        in let (ax, ay) = a
+           and (bx, by) = b
+          in Printf.printf "%d %d -> %d %d\n" ax ay bx by;
+          Affichage.clear screen;
+          Affichage.draw_soluce (Solver.solve map (ax + ay * !w) (bx + by * !w)) screen !w;
+          Affichage.draw map screen;
+          ()
+      );
       Affichage.quit ();
     end
 end
