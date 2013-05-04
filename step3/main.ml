@@ -4,7 +4,9 @@ open CaseMap
 let w = ref 0
 let h = ref 0
 
-let usage_msg = "Usage: " ^ Sys.argv.(0) ^ " width height"
+let generator = ref CaseMap.create
+
+let usage_msg = "Usage: " ^ Sys.argv.(0) ^ " width height [fast]"
 
 let parse argv =
   let dimension str =
@@ -22,8 +24,19 @@ let parse argv =
         print_endline usage_msg;
         exit 1;
       end
-  in
-  Array.iter parse_one Sys.argv
+  in let args = ref Sys.argv
+    in if (Array.length !args) = 4 then
+      if Sys.argv.(3) = "fast" then
+        begin
+          generator := CaseMap.create_fast;
+          args := Array.sub Sys.argv 0 3
+        end
+      else
+        begin
+          print_endline usage_msg;
+          exit 1;
+        end;
+  Array.iter parse_one !args
 
 let () = begin
   parse Sys.argv;
@@ -33,11 +46,11 @@ let () = begin
     begin
       Random.self_init ();
       let screen = Affichage.init !w !h in
-      let map = CaseMap.create !w !h in
+      let map = !generator !w !h in
       Affichage.draw_soluce (Solver.solve map 0 (!w * !h - 1)) screen !w;
       Affichage.draw map screen;
       Affichage.run (function coord ->
-        let [a; b] = coord
+        let a = List.nth coord 0 and b = List.nth coord 1
         in let (ax, ay) = a
            and (bx, by) = b
           in Printf.printf "%d %d -> %d %d\n" ax ay bx by;

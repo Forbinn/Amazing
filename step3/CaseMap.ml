@@ -24,7 +24,7 @@ let rec get_random_side id width height =
 let get_ref_case_from_id cases id =
   ref (List.nth cases id)
 
-(*let generate width height =
+let generate width height =
   let rec create_cases cases n =
     if n < 0 then cases
     else create_cases ((Case.create n n)::cases) (n - 1)
@@ -58,9 +58,9 @@ let get_ref_case_from_id cases id =
               color_cases cases (Case.get_color !a) (Case.get_door !b) [a_id];
             end;
             open_doors cases
-  in open_doors (create_cases [] (width * height - 1))*)
+  in open_doors (create_cases [] (width * height - 1))
 
-let generate width height =
+let generate_fast width height =
   let rec generate_aux l lkl i n width =
     let create_case lkl n width b =
       let case = Case.create n 0
@@ -94,6 +94,13 @@ let create width height =
     width = ref width;
     height = ref height;
     cases = ref (generate width height);
+  }
+
+let create_fast width height =
+  {
+    width = ref width;
+    height = ref height;
+    cases = ref (generate_fast width height);
   }
 
 let get_width map =
